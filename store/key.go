@@ -1,6 +1,7 @@
 package store
 
 import (
+	"hash/fnv"
 	"strconv"
 	"unicode"
 
@@ -45,13 +46,9 @@ func murmur(data []byte) (h uint32) {
 }
 
 func fnv1a(data []byte) (h uint32) {
-	PRIME := uint32(0x01000193)
-	h = 0x811c9dc5
-	for _, b := range data {
-		h ^= uint32(int8(b))
-		h = (h * PRIME)
-	}
-	return h
+	hash := fnv.New32a()
+	hash.Write(data)
+	return hash.Sum32()
 }
 
 func getKeyHashDefalut(key []byte) uint64 {
